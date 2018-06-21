@@ -1,2 +1,2 @@
-# explorer-gps
+# explorer-gps [![CircleCI](https://circleci.com/gh/CMUCloudComputing/explorer-gps.svg?style=svg)](https://circleci.com/gh/CMUCloudComputing/explorer-gps)
 NodeJS GPS service for explorer
