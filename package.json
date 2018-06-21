@@ -1,0 +1,19 @@
+{
+  "name": "explorer-gps",
+  "version": "0.0.0",
+  "description": "GPS service for Explorer project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo 'TODO: write tests' && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grese/explorer-gps.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/grese/explorer-gps/issues"
+  },
+  "homepage": "https://github.com/grese/explorer-gps#readme"
+}
