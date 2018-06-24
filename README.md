@@ -2,6 +2,9 @@
 NodeJS GPS service for explorer
 
 ## Development
+### Pre-Requisites
+- Install [NodeJS](https://nodejs.org/en/download/) *(version >= 8.x.x required)*
+
 ### Installation
 - `cd explorer-gps`
 - `npm install`
