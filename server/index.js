@@ -1,5 +1,5 @@
 
-const PORT = 8888;
+// const PORT = 8888;
 const gpsApi = require('./gps-api');
 const bodyParser = require('body-parser');
 const {logger, expressLogger} = require('./logger');

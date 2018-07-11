@@ -13,15 +13,15 @@ gpsApi.get('/', (req, res) => {
 
 server.listen(8888);
 io.on('connection', function (socket) {
-	console.log(socket.id);
+  console.log(socket.id);
   socket.on('receive-gps', function (data) {
 
-    rclient.hmset( socket.id, "latitude",data.lat,"longitude",data.lon, function(err) {
-    if(err)
-    console.log("error");
-	else
-    console.log(data);
-      });
+    rclient.hmset( socket.id, 'latitude',data.lat,'longitude',data.lon, function(err) {
+      if(err)
+        console.log('error');
+      else
+        console.log(data);
+    });
 
   });
   
