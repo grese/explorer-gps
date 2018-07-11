@@ -8,11 +8,11 @@ const {logger} = require('./logger');
 
 // Just a dummy route.  This can be removed once we start adding real routes.
 gpsApi.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.status(200).sendFile(__dirname + '/index.html');
 
 });
 
-server.listen(8888);
+// server.listen(8888);
 io.on('connection', function (socket) {
   logger.info(socket.id);
   socket.on('receive-gps', function (data) {
