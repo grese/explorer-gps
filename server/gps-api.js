@@ -13,14 +13,19 @@ gpsApi.get('/', (req, res) => {
 
 server.listen(8888);
 io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-  	rclient.set("name1", data.my,redis.print);
-// rclient.get("name1");
+	console.log(socket.id);
+  socket.on('receive-gps', function (data) {
+
+    rclient.hmset( socket.id, "latitude",data.lat,"longitude",data.lon, function(err) {
+    if(err)
+    console.log("error");
+	else
     console.log(data);
+      });
+
   });
+  
+
 });
-
-
 
 module.exports = gpsApi;

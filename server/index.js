@@ -7,6 +7,6 @@ const {logger, expressLogger} = require('./logger');
 gpsApi.use(bodyParser.json());
 gpsApi.use(expressLogger);
 
-gpsApi.listen(PORT, () => {
-  logger.info(`ExplorerGPS is listening on port ${PORT}`);
-});
+// gpsApi.listen(PORT, () => {
+//   logger.info(`ExplorerGPS is listening on port ${PORT}`);
+// });
