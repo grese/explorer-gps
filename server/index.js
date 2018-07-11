@@ -1,12 +1,11 @@
 
-// const PORT = 8888;
-const gpsApi = require('./gps-api');
+const PORT = 8888;
 const bodyParser = require('body-parser');
 const {logger, expressLogger} = require('./logger');
+const {gpsApi, socketServer} = require('./gps-api');
 
 gpsApi.use(bodyParser.json());
 gpsApi.use(expressLogger);
-
-// gpsApi.listen(PORT, () => {
-//   logger.info(`ExplorerGPS is listening on port ${PORT}`);
-// });
+socketServer.listen(PORT, () => {
+  logger.info(`ExplorerGPS is listening on port ${PORT}`);
+});
