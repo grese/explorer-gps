@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="/socket.io/socket.io.js"></script>
+
+
+	<title></title>
+</head>
+<body style="font-size: 25px;">
+	<marquee>Check the terminal for gps data</marquee>
+</body>
+
+<script>
+  var socket = io.connect('http://localhost:8888/');
+
+    socket.emit('receive-gps', { lat: 13.361389,lon: 38.115556 });
+</script>
+</html>
+
