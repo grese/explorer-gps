@@ -34,7 +34,7 @@ jobs:
   deploy:
       docker:
         - image: circleci/node:8
-      working_directory: ~/
+      working_directory: ~/explorer-gps
 
       steps:
         - attach_workspace:
