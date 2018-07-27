@@ -26,23 +26,30 @@ jobs:
       - run:
           name: Unit Tests
           command: npm run test
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - explorer-gps
 
   deploy:
       docker:
         - image: circleci/node:8
-      working_directory: ~/explorer-gps
+      working_directory: ~/
       
       steps:
-        - checkout
+        - attach_workspace:
+            at: ./
+        - run: cd explorer-gps && ls -la
         - run:
             name: Install AWS CLI
             command: sudo apt-get install python-dev build-essential python-pip && sudo pip install awscli
         - run:
-            name: Install (production)
-            command: npm install --production
+            name: Cleanup dev dependencies
+            command: npm prune --production
+        - run: ls -la
         - run:
             name: Create Package
-            command: zip ~/explorer-gps.zip *
+            command: zip ~/explorer-gps.zip * --exclude=.*
         - run:
             name: Deploy to S3
             command: aws s3 cp ~/explorer-gps.zip s3://explorer-deploy/explorer-gps/explorer-gps.zip
