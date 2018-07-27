@@ -1,5 +1,6 @@
 
 version: 2
+
 jobs:
   build:
     docker:
@@ -24,3 +25,33 @@ jobs:
 
       - run: npm run lint
       - run: npm run test
+
+  deploy:
+      machine:
+        enabled: true
+
+      working_directory: ~/explorer-gps
+      
+      steps:
+        - checkout
+
+        - run: sudo pip install awscli
+        - run: npm prune --production
+        - run: zip ~/explorer-gps.zip *
+        - run: aws s3 cp ~/explorer-gps.zip s3://explorer-deploy/explorer-gps/explorer-gps.zip
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
+
+  build_and_deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
