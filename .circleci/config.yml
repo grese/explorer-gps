@@ -39,14 +39,15 @@ jobs:
       steps:
         - attach_workspace:
             at: ~/
-        - run: cd ~/explorer-gps && ls -la
         - run:
             name: Install AWS CLI
             command: sudo apt-get install python-dev build-essential python-pip && sudo pip install awscli
+        - run: cd ~/explorer-gps
+        - run: ls -la ./
         - run:
             name: Prune dependencies
             command: npm prune --production
-        - run: ls -la
+        - run: ls -la ./
         - run:
             name: Create Package
             command: zip ~/explorer-gps.zip * --exclude=.*
