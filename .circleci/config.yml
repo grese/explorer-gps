@@ -1,5 +1,6 @@
 
 version: 2
+
 jobs:
   build:
     docker:
@@ -14,41 +15,29 @@ jobs:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
           - v1-dependencies-
-      - run:
-          name: Install
-          command: npm install
+
+      - run: npm install
+
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-      - run:
-          name: Lint
-          command: npm run lint
-      - run:
-          name: Unit Tests
-          command: npm run test
-  
-  deploy:
-      - run:
-          name: Install AWSCLI
-          command: sudo pip install awscli
-      - run:
-          name: Removing Development Dependencies
-          command: npm prune --production
 
-      - run:
-          name: Creating zip file
-          command: zip ~/explorer-gps.zip *
-      
-      - run:
-          name: Deploy zip to S3
-          command: aws s3 cp ~/explorer-gps.zip s3://explorer-deploy/explorer-gps/explorer-gps.zip
-      
+      - run: npm run lint
+      - run: npm run test
+
+  deploy:
+      - run: sudo pip install awscli
+      - run: npm prune --production
+      - run: zip ~/explorer-gps.zip *
+      - run: aws s3 cp ~/explorer-gps.zip s3://explorer-deploy/explorer-gps/explorer-gps.zip
+
 workflows:
   version: 2
   build:
     jobs:
       - build
+
   build-deploy:
     jobs:
       - build
