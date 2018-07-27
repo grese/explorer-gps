@@ -36,7 +36,7 @@ jobs:
         - checkout
         - run:
             name: Install AWS CLI
-            command: sudo apt-get install python-dev && sudo pip install awscli
+            command: sudo apt-get install python-pip && sudo pip install awscli
         - run:
             name: Install (production)
             command: npm install --production
