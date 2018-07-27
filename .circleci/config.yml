@@ -43,14 +43,12 @@ jobs:
             name: Install AWS CLI
             command: sudo apt-get install python-dev build-essential python-pip && sudo pip install awscli
         - run: cd ~/explorer-gps
-        - run: ls -la ./
         - run:
             name: Prune dependencies
             command: npm prune --production
-        - run: ls -la ./
         - run:
             name: Create Package
-            command: zip ~/explorer-gps.zip * --exclude=.*
+            command: zip -r ~/explorer-gps.zip * --exclude=.*
         - run:
             name: Deploy to S3
             command: aws s3 cp ~/explorer-gps.zip s3://explorer-deploy/explorer-gps/explorer-gps.zip
