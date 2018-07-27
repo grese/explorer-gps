@@ -49,7 +49,7 @@ jobs:
         - run: ls -la
         - run:
             name: Create Package
-            command: zip ~/explorer-gps.zip *
+            command: zip ~/explorer-gps.zip * --exclude=.*
         - run:
             name: Deploy to S3
             command: aws s3 cp ~/explorer-gps.zip s3://explorer-deploy/explorer-gps/explorer-gps.zip
