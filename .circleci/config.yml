@@ -61,12 +61,14 @@ jobs:
             command: |
                 DOCKER_IMAGE=explorer-gps
                 AWS_REGION=us-east-1
+                AWS_ACCOUNT_ID=751958071466
+                DOCKER_TAG=latest
                 # Login to AWS
                 aws configure set region $AWS_REGION
                 $(aws ecr get-login)
                 # Tag and push docker image
-                docker tag app $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
-                docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
+                docker tag $DOCKER_IMAGE:$DOCKER_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:$DOCKER_TAG
+                docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:$DOCKER_TAG
 
 workflows:
   version: 2
