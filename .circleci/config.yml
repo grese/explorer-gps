@@ -55,8 +55,11 @@ jobs:
                 echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $ENV_FILE
                 echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $ENV_FILE
         - run:
+            name: Start Docker
+            command: sudo service docker start
+        - run:
             name: Build Docker Container
-            command: sudo docker build -t explorer-gps .
+            command: docker build -t explorer-gps .
         - run:
             name: Push Docker Image to ECR
             command: |
@@ -66,8 +69,8 @@ jobs:
               aws configure set region $AWS_REGION
               $(aws ecr get-login)
               # Tag and push docker image
-              sudo docker tag app $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
-              sudo docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
+              docker tag app $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
+              docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
 
 workflows:
   version: 2
