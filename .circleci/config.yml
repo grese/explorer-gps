@@ -47,11 +47,25 @@ jobs:
             name: Prune dependencies
             command: npm prune --production
         - run:
-            name: Create Package
-            command: zip -r ~/explorer-gps.zip * --exclude=.*
+            name: Copy Environment Variables
+            command: |
+                ENV_FILE=.env
+                echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $ENV_FILE
+                echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $ENV_FILE
         - run:
-            name: Deploy to S3
-            command: aws s3 cp ~/explorer-gps.zip s3://explorer-deploy/explorer-gps/explorer-gps.zip
+            name: Build Docker Container
+            command: docker build -t explorer-gps .
+        - run:
+            name: Push Docker Image to ECR
+            command: |
+              DOCKER_IMAGE=explorer-gps
+              AWS_REGION=us-east-1
+              # Login to AWS
+              aws configure set region $AWS_REGION
+              $(aws ecr get-login)
+              # Tag and push docker image
+              docker tag app $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
+              docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
 
 workflows:
   version: 2
