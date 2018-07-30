@@ -9,8 +9,6 @@ jobs:
 
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
@@ -39,6 +37,7 @@ jobs:
       working_directory: ~/explorer-gps
 
       steps:
+        - setup_remote_docker
         - attach_workspace:
             at: ~/
         - run:
@@ -55,15 +54,8 @@ jobs:
                 echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $ENV_FILE
                 echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $ENV_FILE
         - run:
-            name: Setup Docker
-            command: |
-                docker --version
-                # sudo service docker stop
-                sudo nohup docker daemon -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock &
-                sudo docker info 
-        - run:
             name: Build Docker Container
-            command: sudo docker build -t explorer-gps .
+            command: docker build -t explorer-gps .
         - run:
             name: Push Docker Image to ECR
             command: |
@@ -73,8 +65,8 @@ jobs:
                 aws configure set region $AWS_REGION
                 $(aws ecr get-login)
                 # Tag and push docker image
-                sudo docker tag app $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
-                sudo docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
+                docker tag app $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
+                docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
 
 workflows:
   version: 2
