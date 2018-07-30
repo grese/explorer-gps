@@ -15,7 +15,7 @@ gpsApi.get('/', (req, res) => {
 // server.listen(8888);
 io.on('connection', function (socket) {
   logger.info(socket.id);
-  socket.on('receive-gps', function (data) {
+  socket.on('receive-gps', function (/*data*/) {
 
     // rclient.hmset( socket.id, 'latitude',data.lat,'longitude',data.lon, function(err) {
     //   if(err)
