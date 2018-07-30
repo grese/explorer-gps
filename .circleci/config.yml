@@ -55,27 +55,26 @@ jobs:
                 echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $ENV_FILE
                 echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $ENV_FILE
         - run:
-            name: Install Docker client
+            name: Setup Docker
             command: |
-                set -x
-                VER="17.03.0-ce"
-                curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
-                tar -xz -C /tmp -f /tmp/docker-$VER.tgz
-                sudo mv /tmp/docker/* /usr/bin -f
+                docker --version
+                # sudo service docker stop
+                sudo nohup docker daemon -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock &
+                sudo docker info 
         - run:
             name: Build Docker Container
-            command: docker build -t explorer-gps .
+            command: sudo docker build -t explorer-gps .
         - run:
             name: Push Docker Image to ECR
             command: |
-              DOCKER_IMAGE=explorer-gps
-              AWS_REGION=us-east-1
-              # Login to AWS
-              aws configure set region $AWS_REGION
-              $(aws ecr get-login)
-              # Tag and push docker image
-              docker tag app $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
-              docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
+                DOCKER_IMAGE=explorer-gps
+                AWS_REGION=us-east-1
+                # Login to AWS
+                aws configure set region $AWS_REGION
+                $(aws ecr get-login)
+                # Tag and push docker image
+                sudo docker tag app $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
+                sudo docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
 
 workflows:
   version: 2
