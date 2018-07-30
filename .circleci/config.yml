@@ -44,14 +44,6 @@ jobs:
         - run:
             name: Install AWS CLI
             command: sudo apt-get install python-dev build-essential python-pip && sudo pip install awscli
-        - run:
-            name: Install Docker client
-            command: |
-                set -x
-                VER="17.03.0-ce"
-                curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
-                tar -xz -C /tmp -f /tmp/docker-$VER.tgz
-                mv /tmp/docker/* /usr/bin
         - run: cd ~/explorer-gps
         - run:
             name: Prune dependencies
@@ -64,7 +56,7 @@ jobs:
                 echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $ENV_FILE
         - run:
             name: Build Docker Container
-            command: docker build -t explorer-gps .
+            command: sudo docker build -t explorer-gps .
         - run:
             name: Push Docker Image to ECR
             command: |
@@ -74,8 +66,8 @@ jobs:
               aws configure set region $AWS_REGION
               $(aws ecr get-login)
               # Tag and push docker image
-              docker tag app $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
-              docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
+              sudo docker tag app $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
+              sudo docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$DOCKER_IMAGE:latest
 
 workflows:
   version: 2
