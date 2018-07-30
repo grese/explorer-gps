@@ -38,6 +38,7 @@ jobs:
         - image: circleci/node:8
       working_directory: ~/explorer-gps
 
+      machine: true
       steps:
         - attach_workspace:
             at: ~/
@@ -54,9 +55,6 @@ jobs:
                 ENV_FILE=.env
                 echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $ENV_FILE
                 echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $ENV_FILE
-        - run:
-            name: Start Docker
-            command: sudo service docker start
         - run:
             name: Build Docker Container
             command: docker build -t explorer-gps .
