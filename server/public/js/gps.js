@@ -115,8 +115,8 @@ function sendUpdatedCoordinates() {
 }
   
 function handleInputFormSubmit(){
-  // mock data setup
-  var userid = 'f7152483-f147-451e-9af6-833eb8e121e7';
+  
+  var userid = aliasInput.value;
   var mapsToBroadcast = [
     { mapID: channelInput.value}
   ]
@@ -124,7 +124,7 @@ function handleInputFormSubmit(){
   var lng = longitudeInput.value;
 
   var payload = {
-    userid: aliasInput.value,
+    userid: userid,
     mapsToBroadcast: mapsToBroadcast,
     coordinates: {
       latitude: lat,

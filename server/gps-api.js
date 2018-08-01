@@ -4,7 +4,7 @@ const gpsApi = express();
 const bodyParser = require('body-parser');
 const http = require('http').Server(gpsApi);
 const io = require('socket.io')(http);
-const {logger} = require('./logger');
+const {logger, expressLogger} = require('./logger');
 
 var rootChannel = 'lobby';
 var channels = {};
@@ -14,6 +14,14 @@ var participants = {};
 gpsApi.use(bodyParser.json());
 gpsApi.use(bodyParser.urlencoded({ extended: true }));   // to support URL-encoded bodies
 gpsApi.use(express.static(path.join(__dirname, 'public')));
+
+gpsApi.use(expressLogger);
+
+gpsApi.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
 // socket.io connections
 io.on('connection', function(socket){
@@ -53,7 +61,7 @@ io.on('connection', function(socket){
     timestamp = new Date();
     removeParticipantFromChannel(socket);
     logger.info('[' + timestamp.toUTCString() + '] channel-join: ' + data);
-    io.emit('system-message', { for: 'everyone', user: getUserInfo(socket.id), message: 'user joined channel ' + String(data), timestamp: timestamp.toUTCString() });
+    io.emit('system-message', { for: 'everyone', userid: getUserInfo(socket.id), message: 'user joined channel ' + String(data), timestamp: timestamp.toUTCString() });
     addParticipantToChannel(socket, String(data));
     listParticipants(String(data));
     socket.emit('channel-participants', participants[String(data)]);
@@ -62,17 +70,12 @@ io.on('connection', function(socket){
   // handle alias change 
   socket.on('alias-change', function(data){
     timestamp = new Date();
-    io.emit('system-message', { for: 'everyone', user: getUserInfo(socket.id), message: 'user changed alias to ' + data, timestamp: timestamp.toUTCString() });
+    io.emit('system-message', { for: 'everyone', userid: getUserInfo(socket.id), message: 'user changed alias to ' + data, timestamp: timestamp.toUTCString() });
     users[socket.id] = data;
   });
   
 
 });
-
-module.exports = {
-  gpsApi: gpsApi,
-  http: http
-};
 
 // get current alias by socked ID
 function getUserInfo(socketID){
@@ -105,3 +108,5 @@ function listParticipants(channelString){
   logger.info(participants[channelString]);
   
 }
+
+module.exports = http;
