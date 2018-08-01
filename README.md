@@ -52,18 +52,18 @@ The below events should be emitted in the following format
 
   - Payload object should include the following
 
-  {
-    userid: 'f7152483-f147-451e-9af6-833eb8e121e7',
-    mapsToBroadcast: [
-      { mapID: 'd935a328-dd9c-4818-b7c1-b6af26e204b8'},
-      { mapID: 'fd950fed-6f53-4ea7-bd61-f387393b9290'} 
-    ],
-    coordinates: {
-      latitude: 41.3888,
-      longitude: 2.1590,
-      heading: 0,
-      speed: 0
-    },
-    timestamp: Date.now()
+  {<br/>
+    userid: 'f7152483-f147-451e-9af6-833eb8e121e7',<br/>
+    mapsToBroadcast: [<br/>
+      { mapID: 'd935a328-dd9c-4818-b7c1-b6af26e204b8'},<br/>
+      { mapID: 'fd950fed-6f53-4ea7-bd61-f387393b9290'} <br/>
+    ],<br/>
+    coordinates: {<br/>
+      latitude: 41.3888,<br/>
+      longitude: 2.1590,<br/>
+      heading: 0,<br/>
+      speed: 0<br/>
+    },<br/>
+    timestamp: Date.now()<br/>
   }
 
