@@ -1,6 +1,6 @@
 
 const request = require('supertest');
-const gpsApi = require('../gps-api').gpsApi;
+const gpsApi = require('../gps-api');
 
 describe('gps-api.js', () => {
   test('the root path should respond to GET method', async () => {
