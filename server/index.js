@@ -1,11 +1,10 @@
 
-const PORT = 8888;
-const bodyParser = require('body-parser');
-const {logger, expressLogger} = require('./logger');
-const {gpsApi, socketServer} = require('./gps-api');
+const {parsed: config = {}} = require('dotenv').config();
+const PORT = config.NODE_ENV === 'production' ? 8888 : 8888;
+const http = require('./gps-api');
+const {logger} = require('./logger');
 
-gpsApi.use(bodyParser.json());
-gpsApi.use(expressLogger);
-socketServer.listen(PORT, () => {
+http.listen(PORT, () => {
   logger.info(`ExplorerGPS is listening on port ${PORT}`);
 });
+
