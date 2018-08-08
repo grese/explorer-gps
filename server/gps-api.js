@@ -6,6 +6,13 @@ const http = require('http').Server(gpsApi);
 const io = require('socket.io')(http);
 const {logger, expressLogger} = require('./logger');
 
+const messageTypes = {
+  USER_LOCATION: 'USER_LOCATION',
+  USER_CONNECTED: 'USER_CONNECTED',
+  USER_DISCONNECTED: 'USER_DISCONNECTED',
+  USER_JOINED_MAP: 'USER_JOINED_MAP'
+};
+
 var rootChannel = 'lobby';
 var channels = {};
 var users = {};
@@ -33,13 +40,13 @@ io.on('connection', function(socket){
 
   var timestamp = new Date() ;
   logger.info('[' + timestamp + '] system-message: ' + socket.id + ' connected');
-  io.emit('system-message', { for: 'everyone', user: socket.id, message: socket.id + ' connected', timestamp: timestamp });
+  io.emit('system-message', {type: messageTypes.USER_CONNECTED, for: 'everyone', user: socket.id, message: socket.id + ' connected', timestamp: timestamp });
 
   // handle disconnection
   socket.on('disconnect', function(){
     timestamp = new Date();
     logger.info('[' + new Date() + '] system-message: ' + socket.id + ' disconnected');
-    io.emit('system-message', { for: 'everyone', user: socket.id, message: socket.id + ' disconnected', timestamp: timestamp});
+    io.emit('system-message', {type: messageTypes.USER_DISCONNECTED, for: 'everyone', user: socket.id, message: socket.id + ' disconnected', timestamp: timestamp});
   });
 
   socket.on('system-gps', function(data){
@@ -48,7 +55,7 @@ io.on('connection', function(socket){
       logger.info('[' + timestamp.toUTCString() + '] system-gps: [' + data.coordinates.latitude + ' ' + data.coordinates.longitude + '] @ below channels');
       for(var i = 0; i < data.mapsToBroadcast.length; i++){
         logger.info('Forwarding GPS data to map: ' + data.mapsToBroadcast[i].mapID);
-        io.to(data.mapsToBroadcast[i].mapID).emit('system-message', { for: 'everyone', userid: data.userid, message: data.coordinates, timestamp: timestamp});  
+        io.to(data.mapsToBroadcast[i].mapID).emit('system-message', {type: messageTypes.USER_LOCATION, for: 'everyone', userid: data.userid, message: data.coordinates, timestamp: timestamp});  
       }
     } else {
       logger.info('necessary payload fields are missing');
@@ -61,7 +68,7 @@ io.on('connection', function(socket){
     timestamp = new Date();
     removeParticipantFromChannel(socket);
     logger.info('[' + timestamp.toUTCString() + '] channel-join: ' + data);
-    io.emit('system-message', { for: 'everyone', userid: getUserInfo(socket.id), message: 'user joined channel ' + String(data), timestamp: timestamp.toUTCString() });
+    io.emit('system-message', {type: messageTypes.USER_JOINED_CHANNEL, for: 'everyone', userid: getUserInfo(socket.id), message: 'user joined channel ' + String(data), timestamp: timestamp.toUTCString() });
     addParticipantToChannel(socket, String(data));
     listParticipants(String(data));
     socket.emit('channel-participants', participants[String(data)]);
